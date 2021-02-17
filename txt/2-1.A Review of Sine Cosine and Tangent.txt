@@ -1,0 +1,7 @@
+2-1.A Review of Sine Cosine and Tangent
+
+ - 직각삼각형에서 한 꼭짓점의 각을 a라 할 때, a의 맞은편에 있는 변을 opposite, a와 직각을 잇는 변을 adjacent라 한다. 그리고 삼각형의 변 중 가장 긴 변을 hypotenuse라 한다.
+ - sin(a) = opposite / hypotenuse  `s = o / h`
+ - cos(a) = adjacent / hypotenuse  `c = a / h`
+ - tan(a) = opposite / adjacent  `t = o / a`
+ - hypotenuse^2 = opposite^2 + adjacent^2
