@@ -5,6 +5,11 @@ const MAP_NUM_COLS = 15;
 const WINDOW_WIDTH = MAP_NUM_COLS * TILE_SIZE;
 const WINDOW_HEIGHT = MAP_NUM_ROWS * TILE_SIZE;
 
+const FOV_ANGLE = 60 * (Math.PI / 180);
+
+const WALL_STRIP_WIDTH = 1;
+const NUM_RAYS = WINDOW_WIDTH / WALL_STRIP_WIDTH;
+
 // Map class
 class Map {
     // contructor : special method which creates and initializes object in class
@@ -84,12 +89,27 @@ class Player {
             this.x = newplayerX;
             this.y = newplayerY;
         }
+    }
+}
 
+class Ray {
+    constructor(rayAngle) {
+        this.rayAngle = rayAngle;
+    }
+    render() {
+        stroke("rgba(255, 0, 0, 0.3)");
+        line(
+            player.x,
+            player.y,
+            player.x + Math.cos(this.rayAngle) * 30,
+            player.y + Math.sin(this.rayAngle) * 30
+        );
     }
 }
 
 var grid = new Map();                               // declare new map
 var player = new Player();                          // declare new player
+var rays = [];                                      // declare rays
 
 // TODO : Set variables when key pressed
 function keyPressed() {
@@ -123,15 +143,31 @@ function keyReleased() {
     }
 }
 
+function castAllRays() {
+    var columnId = 0;
+    // start first ray subtracting half of the FOV
+    var rayAngle = player.rotationAngle - (FOV_ANGLE / 2);
+    rays = [];
+    // loop all columns casting the rays
+    //for (var i = 0; i < NUM_RAYS; i++) {
+    for (var i = 0; i < 1; i++) {
+        var ray = new Ray(rayAngle);
+        // ray.cast();...
+        rays.push(ray);
+        rayAngle += FOV_ANGLE / NUM_RAYS;
+        columnId++;
+    }
+}
+
 // TODO : Initialize all objects
 function setup() {
     createCanvas(WINDOW_WIDTH, WINDOW_HEIGHT);
-
 }
 
 // TODO : update all game objects before we render the next frame
 function update() {
     player.update();
+    castAllRays();
 }
 
 // TODO : render all objects frame by frame
@@ -139,5 +175,8 @@ function draw() {
     update();
 
     grid.render();
+    for (ray of rays) {
+        ray.render();
+    }
     player.render();
 }
