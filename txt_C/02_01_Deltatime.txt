@@ -1,0 +1,44 @@
+델타타임이 나오게 된 이유
+
+ - 델타타임(delta time)은 왜 나오게 되었을까? 이것은 컴퓨터 프로세서의 성능이 좋아지면서 컴퓨터들 간 프레임 처리 속도의 차이가 발생했기 때문이다. 예를들어서 기존의 컴퓨터는 10FPS였다고 가정하자. 그런데 새로운 고성능의 컴퓨터가 나오면서 2배의 프레임을 처리할 수 있는 20FPS가 가능해졌다. FPS는 Frame Per Second로 초당 처리할 수 있는 프레임의 수를 나타내므로 기존의 컴퓨터와 신형 컴퓨터가 같은 시간에 처리하는 프레임의 수는 다를수밖에 없다.
+ - 즉, 1프레임 당 캐릭터가 1m를 이동한다고 치면 기존의 컴퓨터는 1초 당 10m를 이동하는 것이고, 신형 컴퓨터는 1초 당 20m를 이동하게 된다. 같은 시간이 지났지만 기존 컴퓨터에서는 아직 중간지점밖에 못왔는데 신형 컴퓨터는 이미 도착점에 도달한 것이다.
+ - 이를 방지해주는 역할로 delta time을 개발해냈다. 델타타임은 이처럼 유저들 간 발생하는 프레임 처리 속도의 차이를 똑같이 맞추어주는 역할을 하는 것이다. 수업시간의 정의에 의하면 델타타임은 '바로 전 프레임을 수행하는 데 걸린 게임 시간'을 의미한다. 이는 예로 든 기존 컴퓨터가 10FPS니까, 1프레임을 처리하는데 1/10초가 걸린다는 것을 의미한다. 같은 원리로 신형 컴퓨터는 20FPS이기 때문에 신형 컴퓨터의 1프레임 처리 속도는 1/20초가 된다. 이 시간이 바로 델타 타임(dela time)이다. 이 델타타임을 어떻게 쓰느냐? 위에서 말한 캐릭터의 이동 거리에 델타타임을 곱해주면 된다. 1프레임 당 캐릭터가 1m를 이동한다고 했으므로 이를 각각 곱해주면 기존 컴퓨터는 초당 0.1m를 이동하고, 신형 컴퓨터는 초당 0.05m를 이동하기 때문에 10FPS * 0.1 = 1m , 20FPS * 0.05 = 1m로 FPS는 다르지만 시간 안에 이동한 거리는 같아지게 된다. 이렇게 금수저와 흙수저의 격차를 좁혀주기 위해 델타타임이 사용되는 것이다.
+
+델타타임 구현 코드
+
+ - 참조 : http://rapapa.net/?p=381
+```
+double t = 0.0;
+    const double dt = 0.01;
+ 
+    double currentTime = clock();
+    double accumulator = 0.0;
+ 
+    State previous;
+    State current;
+ 
+    while ( !quit )
+    {
+         double newTime = clock();
+         double frameTime = newTime - currentTime;
+         if ( frameTime > 0.25 ) //뻗는 문제를 피해가려면 max 값을 잡습니다.
+              frameTime = 0.25;	  
+         currentTime = newTime;
+ 
+         accumulator += frameTime;
+ 
+         while ( accumulator >= dt )
+         {
+              previousState = currentState;
+              update( currentState, t, dt );
+              t += dt;
+              accumulator -= dt;
+         }
+ 
+         const double alpha = accumulator / dt;
+ 
+         State state = currentState*alpha + previousState * ( 1.0 - alpha );
+ 
+         render( state );
+    }
+```

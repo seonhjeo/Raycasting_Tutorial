@@ -1,0 +1,88 @@
+의존성(Dependencies)
+
+ - 어떤 클래스A가 다른 클래스 또는 인터페이스B를 이용할때 A가 B에 의존한다고 한다.
+ - A는 B없이 작동할 수 없고 B를 재사용하지 않으면 A또한 재사용할 수 없다.
+ - 이러한 상황에서 클래스A를 dependant라 하고 클래스(인터페이스)B를 dependency라고 한다.
+ - dependant는 자신의 dependencies들에게 의존한다.
+ - 서로를 이용하는 두 클래스를 각각 coupled라 한다.
+ - 클래스 사이의 coupling은 느슨할 수도 타이트할 수 있다.
+ - tightness의 정도는 연속적이다.(느슨 또는 타이트(0/1)가 아닌 연속적)
+ - 의존성 또한 강함/약함으로 나타낼 수 있다.
+ - 타이트한 커플링은 강한 의존성을 만들고, 느슨한 커플링은 약한 의존성 또는 의존성을 만들지 않을 수도 있다.
+ - 의존성,커플링은 방향이 존재한다.
+ - A가 B에게 의존한다고해서 B또한 A에 의존적인것은 아니다.
+
+의존성의 단점
+
+ - 의존성은 재사용을 감소시키기 때문에 좋지 않다.
+ - 재사용 감소가 나쁜 이유는 여러가지가 존재한다.
+ - 보통 재사용은 개발 속도,코드 퀄리티, 코드 가독성에 긍정적인 영향을 준다.
+ - 의존성이 재사용성을 해치는 예
+```
+public class CalendarReader {
+    public List readCalendarEvents(File calendarEventFile){
+        //open InputStream from File and read calendar events.
+    }
+}
+```
+ - readCalendarEvents는 File 객체를 파라미터로 받는다. 그러므로 이 메소드는 파일 클래스에 의존한다.
+ - 이 파일 클래스에 대한 의존성은 CalenderReader가 파일 시스템안의 로컬 파일들로부터만 calender 이벤트를 읽을 수 있음을 뜻한다.
+ - 네트워크 연결, 데이터베이스, 클래스패스에 존재하는 리소스로 부터 calendar 이벤트 파일을 읽을 수 없다.
+ - CalendarReader는 파일 클래스와 로컬 파일 시스템에 타이트하게 coupled됐다고 할 수 있다.
+```
+public class CalendarReader {
+    public List readCalendarEvents(InputStream calendarEventFile){
+        //read calendar events from InputStream
+    }
+}
+```
+ - 덜 타이트하게 coupled된 구현은 File 파라미터를 InputStream 파라미터로 바꾼 위의 예이다.
+ - InputStream은 File 객체, 네트워크 소켓, URLConnection 클래스, 클래스 객체, JDBC를 통한 데이터베이스의 column으로 부터 얻을 수 있다.
+ - CalendarReader는 더이상 로컬 파일 시스템에 coupled되지 않는다.
+ - calendar 이벤트 파일들을 많은 소스들로부터 읽을 수 있게됐다.
+ - InputStream 버전의 readCalendarEvents 메소드의 재사용성이 증가했다.
+ - 로컬 파일 시스템과의 타이트한 coupling이 제거됐고 대신 InputStream 클래스에 의존성을 얻었다.
+ - InputStream 의존성은 더욱 유연하지만 CalendarReader가 100% 재사용성을 얻은 것은 아니다.
+ - 아직도 NIO Channel등을 통해 데이터를 쉽게 읽을 수 없다.
+
+의존성의 종류
+
+ - 의존성에는 많은 타입이 존재한다.
+ - 각각의 타입은 다른 코드의 유연성을 이끈다.
+ - 타입 종류 : Class Dependencies, Interface, Method/Field Dependencies
+ - 클래스 의존성 예
+```
+public byte[] readFileContents(String fileName){
+    //open the file and return the contents as a byte array.
+}
+```
+ - 이 메소드는 String을 파라미터로 받는다. 그러므로 이 메소드는 String 클래스에 의존한다.
+ - 인터페이스 의존성 예
+```
+public byte[] readFileContents(CharSequence fileName){
+    //open the file and return the contents as a byte array.
+}
+```
+ - CharSequence는 자바의 스탠다드 인터페이스이다.
+ - CharBuffer, String, StringBuffer, and StringBuilder는 CharSequence 인터페이스를 구현하므로 이 클래스들의 인스턴스들은 이 메소드의 파라미터로 사용될 수 있다.
+ - 메소드 의존성 예
+```
+public byte[] readFileContents(Object fileNameContainer){
+
+    Method method   = fileNameContainer
+                          .getClass()
+                          .getMethod("getFileName", null);
+
+    String fileName = method.invoke(fileNameContainer, null);
+
+    //open the file and return the contents as a byte array.
+}
+```
+ - 메소드/필드 의존성이란 어떤 객체의 메소드 또는 필드에 의존성을 뜻한다.
+ - 파라미터로 받은 객체의 클래스의 getFileName 메소드에 의존한다.
+ - 이 의존성은 메소드 선언에서는 visible하지 않다.
+ - 메소드 또는 필드 의존성은 reflection 사용을 통해 목표를 얻는 API에서 흔하다.
+ - 예를들어 Butterfly Persistence는 reflection을 사용해 클래스의 getter와 setter를 감지한다.
+ - getter와 setter없이 Butterfly Persistence는 클래스의 객체를 데이터베이스에서 읽거나 데이터베이스에 쓸 수 없다.
+ - Hibernate (a similar ORM API)는 reflection을 사용해 getter 또는 setter를 사용할 수 있고 필드에 직접 접근할 수 있다.
+ - 이 방식으로 하이버네츠는 메소드 또는 필드 의존성을 가진다.

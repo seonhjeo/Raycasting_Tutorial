@@ -1,7 +1,0 @@
-2-2.A Review of Degrees and Radians
-
- - Degree(각도)는 한 바퀴를 360도로 나눈 것이다.
- - Radian(라디안)은 원의 둘레의 일부가 반지름과 길이가 같을 때의 각을 뜻한다.
- - 각도는 0부터 360까지, 라디안은 0부터 2파이까지의 범위를 갖는다.
- - a_rad = a_deg * pi / 180
- - a_deg = a_rad * 180 / pi
