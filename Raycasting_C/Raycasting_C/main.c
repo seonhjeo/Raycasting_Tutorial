@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <float.h>
 #include <SDL.h>
 #include "constants.h"
 #include "textures.h"
+#include "upng.h"
 
 const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
@@ -14,7 +16,7 @@ const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
     {1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 2, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
@@ -50,9 +52,9 @@ SDL_Renderer* renderer = NULL;
 int isGameRunning = FALSE;
 int ticksLastFrame;
 
-Uint32* colorBuffer = NULL;
+uint32_t* colorBuffer = NULL;
 SDL_Texture* colorBufferTexture;
-Uint32* textures[NUM_TEXTURES];
+uint32_t* textures[NUM_TEXTURES];
 
 int initializeWindow() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -82,6 +84,7 @@ int initializeWindow() {
 }
 
 void destroyWindow() {
+    freeWallTextures();
     free(colorBuffer);
     SDL_DestroyTexture(colorBufferTexture);
     SDL_DestroyRenderer(renderer);
@@ -101,26 +104,19 @@ void setup() {
     player.turnSpeed = 45 * (PI / 180);
 
     // allocate the total amount of bytes in memory to hold our colorbuffer
-    colorBuffer = (Uint32*)malloc(sizeof(Uint32) * WINDOW_WIDTH * WINDOW_HEIGHT);
+    colorBuffer = (uint32_t*)malloc(sizeof(uint32_t) * WINDOW_WIDTH * WINDOW_HEIGHT);
 
     // create an SDL_Texture to display the colorbuffer
     colorBufferTexture = SDL_CreateTexture(
         renderer,
-        SDL_PIXELFORMAT_ARGB8888,
+        SDL_PIXELFORMAT_RGBA32,
         SDL_TEXTUREACCESS_STREAMING,
         WINDOW_WIDTH,
         WINDOW_HEIGHT
     );
 
-    // load some textures from the textures.h
-    textures[0] = (Uint32*)REDBRICK_TEXTURE;
-    textures[1] = (Uint32*)PURPLESTONE_TEXTURE;
-    textures[2] = (Uint32*)MOSSYSTONE_TEXTURE;
-    textures[3] = (Uint32*)GRAYSTONE_TEXTURE;
-    textures[4] = (Uint32*)COLORSTONE_TEXTURE;
-    textures[5] = (Uint32*)BLUESTONE_TEXTURE;
-    textures[6] = (Uint32*)WOOD_TEXTURE;
-    textures[7] = (Uint32*)EAGLE_TEXTURE;
+    // Asks uPNG library to decode all PNG files and load the wallTextures array
+    loadWallTextures();
 }
 
 int mapHasWallAt(float x, float y) {
@@ -308,11 +304,9 @@ void castRay(float rayAngle, int stripId) {
 }
 
 void castAllRays() {
-    float rayAngle = player.rotationAngle - (FOV_ANGLE / 2);
-
-    for (int stripId = 0; stripId < NUM_RAYS; stripId++) {
-        castRay(rayAngle, stripId);
-        rayAngle += FOV_ANGLE / NUM_RAYS;
+    for (int col = 0; col < NUM_RAYS; col++) {
+        float rayAngle = player.rotationAngle + atan((col - NUM_RAYS / 2) / DIST_PROJ_PLANE);
+        castRay(rayAngle, col);
     }
 }
 
@@ -398,8 +392,7 @@ void update() {
 void generate3DProjection() {
     for (int i = 0; i < NUM_RAYS; i++) {
         float perpDistance = rays[i].distance * cos(rays[i].rayAngle - player.rotationAngle);
-        float distanceProjPlane = (WINDOW_WIDTH / 2) / tan(FOV_ANGLE / 2);
-        float projectedWallHeight = (TILE_SIZE / perpDistance) * distanceProjPlane;
+        float projectedWallHeight = (TILE_SIZE / perpDistance) * DIST_PROJ_PLANE;
 
         int wallStripHeight = (int)projectedWallHeight;
 
@@ -416,21 +409,24 @@ void generate3DProjection() {
         // calculate texture offset X
         int textureOffsetX;
         if (rays[i].wasHitVertical)
-            textureOffsetX = (int)rays[i].wallHitY % TEXTURE_HEIGHT;
+            textureOffsetX = (int)rays[i].wallHitY % TILE_SIZE;
         else
-            textureOffsetX = (int)rays[i].wallHitX % TEXTURE_WIDTH;
+            textureOffsetX = (int)rays[i].wallHitX % TILE_SIZE;
 
         // get the correct textureID number from the map content
         int texNum = rays[i].wallHitContent - 1;
+
+        int texture_width = wallTextures[texNum].width;
+        int texture_height = wallTextures[texNum].height;
 
         // render the wall from wallTopPixel to wallBottomPixel
         for (int y = wallTopPixel; y < wallBottomPixel; y++) {
             // calculate texture offset Y
             int distanceFromTop = y + (wallStripHeight / 2) - (WINDOW_HEIGHT / 2);
-            int textureOffsetY = distanceFromTop * ((float)TEXTURE_HEIGHT / wallStripHeight);
+            int textureOffsetY = distanceFromTop * ((float)texture_height / wallStripHeight);
 
             // set the color of the wall based on the color from the texture
-            Uint32 texelColor = textures[texNum][(TEXTURE_WIDTH * textureOffsetY) + textureOffsetX];
+            uint32_t texelColor = wallTextures[texNum].texture_buffer[(texture_width * textureOffsetY) + textureOffsetX];
             colorBuffer[(WINDOW_WIDTH * y) + i] = texelColor;
         }
 
@@ -440,7 +436,7 @@ void generate3DProjection() {
     }
 }
 
-void clearColorBuffer(Uint32 color) {
+void clearColorBuffer(uint32_t color) {
     for (int x = 0; x < WINDOW_WIDTH; x++)
         for (int y = 0; y < WINDOW_HEIGHT; y++)
             colorBuffer[(WINDOW_WIDTH * y) + x] = color;
@@ -451,7 +447,7 @@ void renderColorBuffer() {
         colorBufferTexture,
         NULL,
         colorBuffer,
-        (int)(WINDOW_WIDTH * sizeof(Uint32))
+        (int)(WINDOW_WIDTH * sizeof(uint32_t))
     );
     SDL_RenderCopy(renderer, colorBufferTexture, NULL, NULL);
 }
