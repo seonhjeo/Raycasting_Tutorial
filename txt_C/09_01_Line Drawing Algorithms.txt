@@ -1,0 +1,40 @@
+DDA 알고리즘
+
+ - 참조 : https://playground10.tistory.com/58
+
+ - 간단하게 좌표상에 존재하는 직선을 디지털(픽셀)로 표현하기 위해 사용하는 알고리즘이다.
+ - DDA알고리즘의 원리
+	- 1. 기울기의 절대값을 확인한다.
+	- 2. 기울기가 1보다 작으면 x축을 기준으로, 기울기가 1보다 크면 y축을 기준으로 잡는다.
+	- 3. 정한 축의 값을 하나씩 올리고 다른 축의 값은 1에 기울기 혹은 기울기의 역수를 곱한 만큼 더한다.
+	- 4. 계산해서 나온 다른 축의 값이 실수면 반올림을 한다.
+	- 5. 계산해서 나온 정수 좌표위치 (x1, y1)에 점(픽셀)을 찍는다.
+
+ - DDA알고리즘 구현
+```
+void DDA(int _iStartX, int iStartY, int iEndX, int iEndY)
+{
+     int iDisX = iEndX - _iStartX;                     // 먼저 X와 Y의 끝점에서 시작점을 때 각각의 증가량(거리)를 구해줍니다.
+     int iDisY = iEndY - _iStartY;
+     float fCurX = _iStartX;                            // 현재 X와 Y좌표
+     float fCurY = _iStartY;
+     int iTotalDis = 0;                                   // 기준축의 총 거리
+
+     iTotalDis =  abs(iDisX) > abs(iDisY) ? abs(iDisX) : abs(iDisY);     // X와 Y의 거리(증가량)을 비교해서 더 큰 게 기준축이 됩니다. 
+
+     PutPixel( Round(fCurX), Round(fCurY) );     // 처음 시작 좌표를 실수라면 반올림해서 찍어줍니다.
+
+     float fIncX = abs(iDisX) / iTotalDis;           // X의 길이를 기준으로 잡은 TotalDis로 나눠줍니다.
+                                                          // (만약 DisX의 길이가 5이고 iTotalDis가 5면 X축 기준이고 증가량은 1입니다.     
+
+     float fIncY = abs(iDisY) / iTotalDis;           // Y의 증가량도 기준으로 잡은 TotalDis로 나눠줘 구해줍니다.
+                                                          // (만약 DisY의 길이가 2이면 기준축은 X, 나눠주면 Y의 증가값 나옴->)
+
+     for( int i = 0; i < TotalDis; ++i )              // 0부터 기준축의 거리만큼 1씩 증가하면서 반복
+     {
+          fCurX += fIncX;                              // 아까 X축 기준이라면 1증가함 
+          fCurY += fIncY;                              // Y는 기존 Y값에 Y증가량 더해줌
+          PutPixel( Round(fCurX), Round(fCurY) );   // 반올림해서 찍어주기
+     }
+}
+```
