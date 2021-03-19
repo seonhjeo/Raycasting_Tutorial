@@ -1,23 +1,15 @@
-﻿  main.c
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\main.c(73,25): warning C4013: 'renderWallProjection'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
-  ray.c
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(6,39): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(8,33): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(13,63): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(47,57): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(51,68): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(57,38): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(91,57): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(95,68): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(101,38): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(153,1): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(162,44): warning C4244: '함수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(163,44): warning C4244: '함수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(164,52): warning C4244: '함수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\ray.c(165,52): warning C4244: '함수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  wall.c
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\wall.c(5,1): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\wall.c(6,1): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\wall.c(36,1): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+﻿  sprite.c
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(13,39): warning C4244: '함수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(14,39): warning C4244: '함수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(30,31): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(32,31): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(33,46): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(26,1): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(52,1): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(64,1): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(65,1): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(74,1): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Raycasting_C\sprite.c(76,1): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  upng.c
   코드를 생성하고 있습니다...
   Raycasting_C.vcxproj -> C:\Users\hoya0\Desktop\Pikuma\Raycasting Programming with C\Raycasting_C\Debug\Raycasting_C.exe

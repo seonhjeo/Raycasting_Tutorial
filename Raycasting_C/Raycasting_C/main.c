@@ -1,23 +1,21 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <limits.h>
 #include "defs.h"
 #include "graphics.h"
 #include "map.h"
 #include "player.h"
 #include "ray.h"
+#include "wall.h"
 #include "texture.h"
+#include "sprite.h"
 
 bool isGameRunning = false;
 int ticksLastFrame;
 
 void setup(void) {
-
-    // Asks uPNG library to decode all PNG files and loads the wallTextures array
-    loadWallTextures();
+    loadTextures();
 }
-
 
 void processInput(void) {
     SDL_Event event;
@@ -70,17 +68,21 @@ void update(void) {
 void render(void) {
     clearColorBuffer(0xFF000000);
     
+    // Render the walls and sprites
     renderWallProjection();
+    renderSpriteProjection();
 
-    renderMap();
-    renderRays();
-    renderPlayer();
+    // Render the minimap objects;
+    renderMapGrid();
+    renderMapRays();
+    renderMapSprites();
+    renderMapPlayer();
     
     renderColorBuffer();
 }
 
 void releaseResources(void) {
-    freeWallTextures();
+    freeTextures();
     destroyWindow();
 }
 
