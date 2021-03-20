@@ -7,11 +7,13 @@
 #include "player.h"
 #include "ray.h"
 #include "wall.h"
-#include "texture.h"
 #include "sprite.h"
+#include "texture.h"
 
 bool isGameRunning = false;
-int ticksLastFrame;
+int ticksLastFrame = 0;
+int frameCount = 0;
+int previousSecondTicks = 0;
 
 void setup(void) {
     loadTextures();
@@ -53,12 +55,7 @@ void processInput(void) {
 }
 
 void update(void) {
-    int timeToWait = FRAME_TIME_LENGTH - (SDL_GetTicks() - ticksLastFrame);
-    if (timeToWait > 0 && timeToWait <= FRAME_TIME_LENGTH) {
-        SDL_Delay(timeToWait);
-    }
     float deltaTime = (SDL_GetTicks() - ticksLastFrame) / 1000.0f;
-
     ticksLastFrame = SDL_GetTicks();
 
     movePlayer(deltaTime);
@@ -72,7 +69,7 @@ void render(void) {
     renderWallProjection();
     renderSpriteProjection();
 
-    // Render the minimap objects;
+    // Render the minimap objects
     renderMapGrid();
     renderMapRays();
     renderMapSprites();

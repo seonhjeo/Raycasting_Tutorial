@@ -10,12 +10,13 @@ player_t player = {
     .walkDirection = 0,
     .rotationAngle = PI / 2,
     .walkSpeed = 100,
-    .turnSpeed = 45 * (PI / 180)
+    .turnSpeed = 30 * (PI / 180)
 };
 
 void movePlayer(float deltaTime) {
     player.rotationAngle += player.turnDirection * player.turnSpeed * deltaTime;
     normalizeAngle(&player.rotationAngle);
+
     float moveStep = player.walkDirection * player.walkSpeed * deltaTime;
 
     float newPlayerX = player.x + cos(player.rotationAngle) * moveStep;

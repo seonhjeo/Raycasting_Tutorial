@@ -1,20 +1,20 @@
 #include "texture.h"
 
 static const char* textureFileNames[NUM_TEXTURES] = {
-    "./images/redbrick.png",
-    "./images/purplestone.png",
-    "./images/mossystone.png",
-    "./images/graystone.png",
-    "./images/colorstone.png",
-    "./images/bluestone.png",
-    "./images/wood.png",
-    "./images/eagle.png",
-    "./images/pikuma.png",
-    "./images/barrel.png",
-    "./imgaes/light.png",
-    "./images/table.png",
-    "./images/guard.png",
-    "./images/armor.png"
+    "./images/redbrick.png",    // [0]
+    "./images/purplestone.png", // [1]
+    "./images/mossystone.png",  // [2]
+    "./images/graystone.png",   // [3]
+    "./images/colorstone.png",  // [4]
+    "./images/bluestone.png",   // [5]
+    "./images/wood.png",        // [6]
+    "./images/eagle.png",       // [7]
+    "./images/pikuma.png",      // [8]
+    "./images/barrel.png",      // [9]
+    "./images/light.png",       // [10]
+    "./images/table.png",       // [11]
+    "./images/guard.png",       // [12]
+    "./images/armor.png"        // [13]
 };
 
 void loadTextures(void) {
@@ -25,10 +25,10 @@ void loadTextures(void) {
             if (upng_get_error(upng) == UPNG_EOK) {
                 textures[i] = upng;
             } else {
-                printf("Error decoding texture files %s \n", textureFileNames[i]);
+                printf("Error decoding texture file %s \n", textureFileNames[i]);
             }
         } else {
-            printf("Error loading textures %s \n", textureFileNames[i]);
+            printf("Error loading texture %s \n", textureFileNames[i]);
         }
     }
 }

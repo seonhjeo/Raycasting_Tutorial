@@ -1169,7 +1169,7 @@ upng_t* upng_new_from_file(const char *filename)
 		return NULL;
 	}
 
-	fopen_s(&file, filename, "rb");
+	file = fopen(filename, "rb");
 	if (file == NULL) {
 		SET_ERROR(upng, UPNG_ENOTFOUND);
 		return upng;

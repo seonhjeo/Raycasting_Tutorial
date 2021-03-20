@@ -1,4 +1,6 @@
 #include "utils.h"
+#include "defs.h"
+#include <math.h>
 
 void normalizeAngle(float* angle) {
     *angle = remainder(*angle, TWO_PI);

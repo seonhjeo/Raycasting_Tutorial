@@ -7,15 +7,15 @@
 #include "texture.h"
 
 typedef struct {
-	float x;
-	float y;
-	float distance;
-	float angle;
-	bool visible;
-	int texture;
+    float x;
+    float y;
+    float distance;
+    float angle;
+    bool visible;
+    int texture;
 } sprite_t;
 
-void renderSpriteProjection(void);
 void renderMapSprites(void);
+void renderSpriteProjection(void);
 
 #endif
